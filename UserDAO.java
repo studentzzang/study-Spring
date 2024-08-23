@@ -1,6 +1,7 @@
 import java.sql.*;
 
-public class UserDAO {
+// 부모 클래스 (리팩토링)
+public abstract class UserDAO {
     public void add(User user) throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -41,7 +42,9 @@ public class UserDAO {
         return user;
     }
 
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+    public abstract Connection getConnection() throws ClassNotFoundException, SQLException;
+
+    /*public static void main(String[] args) throws ClassNotFoundException, SQLException {
         UserDAO dao = new UserDAO();
 
         User user = new User();
@@ -58,7 +61,10 @@ public class UserDAO {
         System.out.println(user2.getName() + "조회 성공");
         System.out.println("id : " + user2.getId());
         System.out.println("password : " + user2.getPw());
-    }
+    }*/
 }
+
+
+
 
 
