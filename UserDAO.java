@@ -1,11 +1,15 @@
 import java.sql.*;
 
 // 부모 클래스 (리팩토링)
-public abstract class UserDAO {
-    public void add(User user) throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
+public class UserDAO {
 
-        Connection c = DriverManager.getConnection("jdbc:mysql://localhost/spring", "root", "1234");
+    private SimpleConnectionMaker simpleConnectionMaker;
+
+    public UserDAO() {
+        simpleConnectionMaker = new SimpleConnectionMaker();
+    }
+    public void add(User user) throws ClassNotFoundException, SQLException {
+        Connection c = simpleConnectionMaker.makeNewConnection();
 
         PreparedStatement ps = c.prepareStatement(  "insert into users(id,name,password) values(?,?,?)");
 
@@ -20,9 +24,8 @@ public abstract class UserDAO {
     }
 
     public User getUser(String id) throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-
-        Connection c = DriverManager.getConnection("jdbc:mysql://localhost/spring", "root", "1234");
+        Connection c = simpleConnectionMaker.makeNewConnection();
+        
         PreparedStatement ps = c.prepareStatement(  "select * from users where id=?");
         ps.setString(1, id);
 
@@ -41,8 +44,6 @@ public abstract class UserDAO {
 
         return user;
     }
-
-    public abstract Connection getConnection() throws ClassNotFoundException, SQLException;
 
     /*public static void main(String[] args) throws ClassNotFoundException, SQLException {
         UserDAO dao = new UserDAO();
